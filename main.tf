@@ -19,14 +19,20 @@ provider "azurerm" {
 # RESOURCE GROUP
 # ============================================================
 resource "azurerm_resource_group" "example" {
-  name     = "rg-landing-zone"
-  location = "eastus"
+  name     = var.resource_group_name
+  location = var.location
 }
 
 # ============================================================
 # VIRTUAL NETWORK
 # ============================================================
-
+resource "azurerm_virtual_network" "main" {
+  name                = "vnet-${var.environment}-${var.location_short}"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  address_space       = ["10.0.0.0/16"]
+  dns_servers         = ["10.0.0.4", "10.0.0.5"]
+}
 
 # ============================================================
 # SUBNETS
